@@ -44,8 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
       
-      // SIMULASI PROSES LOGIN (2 detik)
-      Future.delayed(const Duration(seconds: 2), () {
+      // SIMULASI PROSES LOGIN (1.5 detik saja)
+      Future.delayed(const Duration(milliseconds: 1500), () {
         setState(() {
           _isLoading = false;
         });
@@ -55,10 +55,10 @@ class _LoginScreenState extends State<LoginScreen> {
         
         // VALIDASI CREDENTIAL DUMMY
         if (email == _dummyEmail && password == _dummyPassword) {
-          // LOGIN BERHASIL
-          _showSuccessDialog();
+          // LOGIN BERHASIL - LANGSUNG KE HOME
+          Navigator.pushReplacementNamed(context, '/home');
         } else {
-          // LOGIN GAGAL
+          // LOGIN GAGAL - TAMPILKAN ERROR
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: const Text('Email atau password salah!'),
@@ -69,60 +69,6 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       });
     }
-  }
-
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              Icon(Icons.check_circle, color: AppColors.success),
-              const SizedBox(width: 10),
-              Text(
-                'Login Berhasil!',
-                style: TextStyle(
-                  color: AppColors.success,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Selamat datang, $_dummyNama!'),
-              const SizedBox(height: 10),
-              const Text('Aplikasi ini adalah versi demo untuk tugas kuliah.'),
-              const SizedBox(height: 5),
-              Text(
-                'Email: $_dummyEmail',
-                style: TextStyle(fontSize: 12, color: AppColors.grey),
-              ),
-              Text(
-                'Password: $_dummyPassword',
-                style: TextStyle(fontSize: 12, color: AppColors.grey),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                // TODO: nanti navigasi ke Home Screen
-              },
-              child: Text(
-                'LANJUT KE HOME',
-                style: TextStyle(color: AppColors.primaryRed),
-              ),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   void _showHelpDialog() {
@@ -203,13 +149,6 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       },
     );
-  }
-
-  void _autoLogin() {
-    // Tombol untuk auto-login (testing cepat)
-    _emailController.text = _dummyEmail;
-    _passwordController.text = _dummyPassword;
-    _handleLogin();
   }
 
   @override
@@ -383,17 +322,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     CustomButton(
                       text: 'Log in',
                       onPressed: _handleLogin,
-                      isLoading: _isLoading,
-                    ),
-                    
-                    const SizedBox(height: 16),
-                    
-                    // Auto Login Button (untuk testing cepat)
-                    CustomButton(
-                      text: 'AUTO LOGIN (Testing)',
-                      onPressed: _autoLogin,
-                      backgroundColor: AppColors.success,
-                      textColor: Colors.white,
                       isLoading: _isLoading,
                     ),
                     

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import './screens/splash_screen.dart';
 import './screens/login_screen.dart';
 import './screens/language_help_screen.dart';
+import './screens/home_screen.dart';
+import './screens/my_classes_screen.dart';
+import './screens/notification_screen.dart';
 import './utils/app_colors.dart';
 
 void main() {
@@ -20,7 +23,7 @@ class MyApp extends StatelessWidget {
         primaryColor: AppColors.primaryRed,
         primarySwatch: Colors.red,
         scaffoldBackgroundColor: Colors.white,
-        fontFamily: 'Roboto',
+        fontFamily: 'Poppins', // Ganti ke Poppins
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFFB6252A),
           elevation: 0,
@@ -29,6 +32,7 @@ class MyApp extends StatelessWidget {
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.w600,
+            fontFamily: 'Poppins',
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -47,6 +51,9 @@ class MyApp extends StatelessWidget {
         '/': (context) => const SplashScreen(),
         '/login': (context) => const LoginScreen(),
         '/language-help': (context) => const LanguageHelpScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/my-classes': (context) => const MyClassesScreen(),
+        '/notifications': (context) => const NotificationScreen(),
       },
     );
   }
