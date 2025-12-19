@@ -65,6 +65,9 @@ flutter:
     - assets/images/logo.png
     - assets/images/indonesia_flag.png
     - assets/images/uk_flag.png
+    - assets/images/announcement_banner.png
+    - assets/images/announcement_icon.png
+    - assets/images/admin_avatar.png
   fonts:
     - family: Poppins
       fonts:

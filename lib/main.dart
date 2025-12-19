@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './providers/user_provider.dart';
+import './providers/announcement_provider.dart'; 
 import './screens/splash_screen.dart';
 import './screens/login_screen.dart';
 import './screens/language_help_screen.dart';
@@ -10,18 +11,18 @@ import './screens/notification_screen.dart';
 import './screens/profile_screen.dart';
 import './screens/kelas_detail_screen.dart';
 import './screens/edit_profile_screen.dart';
+import './screens/announcements_screen.dart';
+import './screens/announcement_detail_screen.dart';
 import './utils/app_colors.dart';
 
 void main() {
-  // Pastikan binding Flutter diinisialisasi sebelum runApp
   WidgetsFlutterBinding.ensureInitialized();
   
   runApp(
-    // Wrap with MultiProvider for state management
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        // Anda bisa menambahkan provider lain di sini nanti
+        ChangeNotifierProvider(create: (_) => AnnouncementProvider()),
       ],
       child: const MyApp(),
     ),
@@ -153,13 +154,23 @@ class MyApp extends StatelessWidget {
         '/notifications': (context) => const NotificationScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/edit-profile': (context) => const EditProfileScreen(),
+        '/announcements': (context) => const AnnouncementsScreen(),
         '/kelas-detail': (context) {
           final kelas = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
           return KelasDetailScreen(kelas: kelas);
         },
+        // TAMBAHKAN ROUTE INI - YANG HILANG
+        '/announcement-detail': (context) {
+          final announcementId = ModalRoute.of(context)!.settings.arguments as String;
+          return AnnouncementDetailScreen(announcementId: announcementId);
+        },
       },
       // Error handling untuk route yang tidak ditemukan
       onGenerateRoute: (settings) {
+        // Debug print
+        print('Unknown route: ${settings.name}');
+        print('Arguments: ${settings.arguments}');
+        
         return MaterialPageRoute(
           builder: (context) => Scaffold(
             appBar: AppBar(
@@ -179,6 +190,11 @@ class MyApp extends StatelessWidget {
                     'Halaman "${settings.name}" tidak ditemukan',
                     style: const TextStyle(fontSize: 16),
                   ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Coba akses: /home, /announcements, dll',
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
@@ -190,11 +206,6 @@ class MyApp extends StatelessWidget {
           ),
         );
       },
-      // Navigasi observasi untuk debugging
-      navigatorObservers: [
-        // Anda bisa menambahkan observer untuk analytics atau debugging
-        // RouteObserver(),
-      ],
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
+import '../providers/announcement_provider.dart'; // TAMBAHKAN IMPORT INI
 import '../utils/app_colors.dart';
 import '../widgets/tugas_card.dart';
 import '../widgets/kelas_card.dart';
@@ -64,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'namaMataKuliah': 'PEMROGRAMAN PERANGKAT BERGERAK MULTIMEDIA',
       'dosen': 'APJ',
       'progress': 90.0,
-      'tahunAjaran': 2021,
+                    'tahunAjaran': 2021,
     },
     {
       'id': '5',
@@ -96,7 +97,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     // Get user from provider (WILL AUTO UPDATE WHEN DATA CHANGES)
     final userProvider = Provider.of<UserProvider>(context);
+    final announcementProvider = Provider.of<AnnouncementProvider>(context); // TAMBAHKAN
     final user = userProvider.currentUser;
+    
+    // Ambil pengumuman terbaru (pertama dari list)
+    final latestAnnouncement = announcementProvider.announcements.isNotEmpty 
+      ? announcementProvider.announcements[0] 
+      : null;
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -265,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // Aksi lihat semua pengumuman
+                          Navigator.pushNamed(context, '/announcements');
                         },
                         child: Text(
                           'Lihat Semua',
@@ -281,43 +288,62 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 
                 // Container Pengumuman
-                Container(
-                  width: double.infinity,
-                  height: 229,
-                  margin: const EdgeInsets.only(top: 10),
-                  color: AppColors.lightGreyTransparent,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20, top: 12),
-                        child: Text(
-                          'Maintenance Pra UAS Semester Genap 2020/2021',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.black,
+                GestureDetector(
+                  onTap: () {
+                    if (latestAnnouncement != null) {
+                      Navigator.pushNamed(
+                        context,
+                        '/announcement-detail',
+                        arguments: latestAnnouncement.id,
+                      );
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 229,
+                    margin: const EdgeInsets.only(top: 10),
+                    color: AppColors.lightGreyTransparent,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, top: 12),
+                          child: Text(
+                            latestAnnouncement?.title ?? 'Maintenance Pra UAS Semester Genap 2020/2021',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.black,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      // Gambar Pengumuman (placeholder)
-                      Center(
-                        child: Container(
-                          width: 310,
-                          height: 169,
-                          decoration: BoxDecoration(
-                            color: AppColors.lightGrey,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Icon(
-                            Icons.announcement,
-                            size: 60,
-                            color: AppColors.grey,
+                        const SizedBox(height: 16),
+                        // Gambar Pengumuman - SEKARANG PAKAI GAMBAR DARI PROVIDER
+                        Center(
+                          child: Container(
+                            width: 310,
+                            height: 169,
+                            decoration: BoxDecoration(
+                              color: AppColors.lightGrey,
+                              borderRadius: BorderRadius.circular(10),
+                              image: latestAnnouncement?.imageUrl != null
+                                ? DecorationImage(
+                                    image: AssetImage(latestAnnouncement!.imageUrl!),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
+                            ),
+                            child: latestAnnouncement?.imageUrl == null
+                              ? Icon(
+                                  Icons.announcement,
+                                  size: 60,
+                                  color: AppColors.grey,
+                                )
+                              : null,
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 
