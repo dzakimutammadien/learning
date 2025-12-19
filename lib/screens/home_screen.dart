@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
 import '../utils/app_colors.dart';
 import '../widgets/tugas_card.dart';
 import '../widgets/kelas_card.dart';
@@ -92,6 +94,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get user from provider (WILL AUTO UPDATE WHEN DATA CHANGES)
+    final userProvider = Provider.of<UserProvider>(context);
+    final user = userProvider.currentUser;
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Stack(
@@ -111,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header dengan nama user dan status
+                // Header dengan nama user dan status - NOW USING PROVIDER
                 Container(
                   padding: const EdgeInsets.only(
                     top: 37,
@@ -122,12 +128,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Nama User
+                      // Nama User - AUTO UPDATES
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Hallo, DANDY CANDRA PRATAMA',
+                            'Hallo, ${user.fullName}',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
@@ -146,47 +152,52 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       
-                      // Status Mahasiswa
-                      Container(
-                        width: 105,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          color: AppColors.darkRed,
-                          borderRadius: BorderRadius.circular(25),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.25),
-                              blurRadius: 4,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'MAHASISWA',
-                              style: TextStyle(
-                                fontSize: 9,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.white,
+                      // Status Mahasiswa - BISA DIKLIK
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/profile');
+                        },
+                        child: Container(
+                          width: 105,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: AppColors.darkRed,
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.25),
+                                blurRadius: 4,
+                                offset: const Offset(0, 4),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            Container(
-                              width: 20,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: AppColors.white),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                user.role,
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.white,
+                                ),
                               ),
-                              child: Icon(
-                                Icons.search,
-                                size: 12,
-                                color: AppColors.white,
+                              const SizedBox(width: 8),
+                              Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: AppColors.white),
+                                ),
+                                child: Icon(
+                                  Icons.person,
+                                  size: 12,
+                                  color: AppColors.white,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
