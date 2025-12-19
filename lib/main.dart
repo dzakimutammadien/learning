@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './screens/splash_screen.dart';
 import './screens/login_screen.dart';
+import './screens/language_help_screen.dart';
 import './utils/app_colors.dart';
 
 void main() {
@@ -8,7 +9,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key}); // PERBAIKAN: gunakan super.key
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +17,12 @@ class MyApp extends StatelessWidget {
       title: 'CeLOE LMS',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: AppColors.primaryRed, // WARNA MERAH
-        primarySwatch: Colors.red, // GANTI KE RED
+        primaryColor: AppColors.primaryRed,
+        primarySwatch: Colors.red,
         scaffoldBackgroundColor: Colors.white,
         fontFamily: 'Roboto',
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFB6252A), // WARNA MERAH
+          backgroundColor: Color(0xFFB6252A),
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.white),
           titleTextStyle: TextStyle(
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: AppColors.primaryRed),
+            borderSide: const BorderSide(color: AppColors.primaryRed, width: 2),
           ),
         ),
       ),
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         '/login': (context) => const LoginScreen(),
+        '/language-help': (context) => const LanguageHelpScreen(),
       },
     );
   }
