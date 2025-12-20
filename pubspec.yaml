@@ -75,6 +75,10 @@ flutter:
     - assets/images/english.png
     - assets/images/multimedia.png
     - assets/images/sports.png
+    - assets/images/back_icon.png
+    - assets/images/arrow_right.png
+    - assets/images/quiz.png
+    - assets/images/checklist.png
   fonts:
     - family: Poppins
       fonts:

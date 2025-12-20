@@ -92,18 +92,11 @@ class _MyClassesScreenState extends State<MyClassesScreen> {
                     return ClassCardMyClasses(
                       kelas: kelas,
                       onTap: () {
+                        // Navigasi ke halaman detail kelas baru
                         Navigator.pushNamed(
                           context,
-                          '/kelas-detail',
-                          arguments: {
-                            'id': kelas.id,
-                            'kodeKelas': kelas.kodeKelas,
-                            'namaMataKuliah': kelas.namaMataKuliah,
-                            'dosen': kelas.dosen,
-                            'progress': kelas.progress,
-                            'tahunAjaran': kelas.tahunAjaran,
-                            'imageUrl': kelas.imageUrl,
-                          },
+                          '/class-detail',  // GANTI dari '/kelas-detail' ke '/class-detail'
+                          arguments: kelas.id, // Hanya kirim ID saja
                         );
                       },
                     );
