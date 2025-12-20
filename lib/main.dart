@@ -14,6 +14,7 @@ import './screens/edit_profile_screen.dart';
 import './screens/announcements_screen.dart';
 import './screens/announcement_detail_screen.dart';
 import './utils/app_colors.dart';
+import './providers/class_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => AnnouncementProvider()),
+        ChangeNotifierProvider(create: (_) => ClassProvider()),
       ],
       child: const MyApp(),
     ),

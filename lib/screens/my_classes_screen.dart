@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/class_provider.dart';
 import '../utils/app_colors.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../widgets/class_card_my_classes.dart';
 
 class MyClassesScreen extends StatefulWidget {
   const MyClassesScreen({Key? key}) : super(key: key);
@@ -10,106 +13,110 @@ class MyClassesScreen extends StatefulWidget {
 }
 
 class _MyClassesScreenState extends State<MyClassesScreen> {
-  int _currentIndex = 1;
+  int _currentIndex = 1; // Karena ini halaman "Kelas Saya"
+
+  void _onBottomNavTap(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(context, '/home');
+        break;
+      case 1:
+        // Sudah di halaman Kelas Saya
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(context, '/notifications');
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final classProvider = Provider.of<ClassProvider>(context);
+    final myClasses = classProvider.myClasses;
+
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.lightGreyTransparent,
       body: Column(
         children: [
-          // App Bar
+          // Header dengan back button
           Container(
-            padding: const EdgeInsets.only(
-              top: 50,
-              left: 20,
-              right: 20,
-              bottom: 20,
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.primaryRed,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            height: 91,
+            width: double.infinity,
+            color: AppColors.white,
+            padding: const EdgeInsets.only(top: 40),
+            child: Stack(
               children: [
-                IconButton(
-                  icon: Icon(Icons.arrow_back, color: AppColors.white),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                Text(
-                  'Kelas Saya',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.white,
+                Center(
+                  child: Text(
+                    'Kelas Saya',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.black,
+                    ),
                   ),
                 ),
-                Container(width: 40), // Spacer untuk balance
+                Positioned(
+                  left: 20,
+                  top: 0,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: AppColors.black,
+                      size: 24,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
               ],
             ),
           ),
-          
-          // Content
+
+          // Konten Kelas
           Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.class_,
-                    size: 80,
-                    color: AppColors.grey,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Halaman Kelas Saya',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Fitur ini dalam pengembangan',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 14,
-                      color: AppColors.grey,
-                    ),
-                  ),
-                ],
+            child: Container(
+              color: AppColors.white,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.only(
+                  left: 28,
+                  right: 28,
+                  top: 25,
+                  bottom: 100,
+                ),
+                child: Column(
+                  children: myClasses.map((kelas) {
+                    return ClassCardMyClasses(
+                      kelas: kelas,
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/kelas-detail',
+                          arguments: {
+                            'id': kelas.id,
+                            'kodeKelas': kelas.kodeKelas,
+                            'namaMataKuliah': kelas.namaMataKuliah,
+                            'dosen': kelas.dosen,
+                            'progress': kelas.progress,
+                            'tahunAjaran': kelas.tahunAjaran,
+                            'imageUrl': kelas.imageUrl,
+                          },
+                        );
+                      },
+                    );
+                  }).toList(),
+                ),
               ),
             ),
           ),
-          
-          // Bottom Navigation Bar
-          BottomNavBar(
-            currentIndex: _currentIndex,
-            onTap: (index) {
-              setState(() {
-                _currentIndex = index;
-                switch (index) {
-                  case 0:
-                    Navigator.pushReplacementNamed(context, '/home');
-                    break;
-                  case 1:
-                    // Sudah di Kelas Saya
-                    break;
-                  case 2:
-                    Navigator.pushReplacementNamed(context, '/notifications');
-                    break;
-                }
-              });
-            },
-          ),
         ],
+      ),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: _onBottomNavTap,
       ),
     );
   }

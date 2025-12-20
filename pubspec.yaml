@@ -68,6 +68,13 @@ flutter:
     - assets/images/announcement_banner.png
     - assets/images/announcement_icon.png
     - assets/images/admin_avatar.png
+    - assets/images/uiux.png
+    - assets/images/INLIS000000000011050.png
+    - assets/images/operatingsystem-min1.png
+    - assets/images/mobile_programming.png
+    - assets/images/english.png
+    - assets/images/multimedia.png
+    - assets/images/sports.png
   fonts:
     - family: Poppins
       fonts:
