@@ -3,13 +3,15 @@ import 'package:provider/provider.dart';
 import '../providers/class_detail_provider.dart';
 import '../providers/material_detail_provider.dart';
 import '../providers/tugas_detail_provider.dart';
-import '../models/class_content_model.dart'; // IMPORT INI
+import '../providers/quiz_provider.dart'; // TAMBAHKAN INI
+import '../models/class_content_model.dart';
+import '../models/tugas_detail_model.dart'; // TAMBAHKAN INI
 import '../utils/app_colors.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/class_content_card.dart';
 import '../widgets/material_detail_bottom_sheet.dart';
-import '../widgets/tugas_detail_bottom_sheet.dart';
-import '../screens/tugas_detail_screen.dart'; // TAMBAHKAN INI
+import '../screens/tugas_detail_screen.dart';
+import '../screens/quiz_detail_screen.dart'; // TAMBAHKAN INI
 
 class ClassDetailScreen extends StatefulWidget {
   final String classId;
@@ -80,15 +82,26 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
     );
   }
 
-  // Fungsi untuk show tugas/kuis detail - LANGSUNG KE HALAMAN DETAIL TUGAS
-  void _showTugasDetail(BuildContext context, String tugasId) {
-    // Langsung navigasi ke halaman detail tugas full screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TugasDetailScreen(tugasId: tugasId),
-      ),
-    );
+  // Fungsi untuk membuka detail tugas/kuis
+  void _openTugasDetail(BuildContext context, String tugasId) {
+    final tugasProvider = Provider.of<TugasDetailProvider>(context, listen: false);
+    final tugasDetail = tugasProvider.getTugasDetailById(tugasId);
+    
+    if (tugasDetail.type == TugasType.kuis) {
+      // Untuk kuis, navigasi ke halaman detail kuis
+      Navigator.pushNamed(
+        context,
+        '/quiz-detail',
+        arguments: tugasId, // Gunakan tugasId sebagai quizId
+      );
+    } else {
+      // Untuk tugas, navigasi ke halaman detail tugas
+      Navigator.pushNamed(
+        context,
+        '/tugas-detail',
+        arguments: tugasId,
+      );
+    }
   }
 
   @override
@@ -384,8 +397,8 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
                 // Untuk materi, tampilkan bottom sheet materi
                 _showMaterialDetailBottomSheet(context, content.materialId ?? content.id);
               } else {
-                // Untuk tugas/kuis, langsung ke halaman detail tugas
-                _showTugasDetail(context, content.tugasId ?? content.id);
+                // Untuk tugas/kuis, buka detail sesuai jenis
+                _openTugasDetail(context, content.tugasId ?? content.id);
               }
             },
           );

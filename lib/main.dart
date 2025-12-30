@@ -6,7 +6,8 @@ import './providers/class_provider.dart';
 import './providers/class_detail_provider.dart';
 import './providers/material_detail_provider.dart';
 import './providers/tugas_detail_provider.dart';
-import './providers/video_provider.dart'; // TAMBAH INI - IMPORT VIDEO PROVIDER
+import './providers/video_provider.dart';
+import './providers/quiz_provider.dart'; // TAMBAHKAN INI
 import './screens/splash_screen.dart';
 import './screens/login_screen.dart';
 import './screens/language_help_screen.dart';
@@ -21,9 +22,13 @@ import './screens/announcement_detail_screen.dart';
 import './screens/class_detail_screen.dart';
 import './screens/material_detail_screen.dart';
 import './screens/document_viewer_screen.dart';
-import './screens/video_player_screen.dart'; // TAMBAH INI - IMPORT VIDEO PLAYER SCREEN
-import './screens/tugas_detail_screen.dart'; // TAMBAHKAN INI
-import './screens/upload_file_screen.dart'; // TAMBAHKAN INI
+import './screens/video_player_screen.dart';
+import './screens/tugas_detail_screen.dart';
+import './screens/upload_file_screen.dart';
+import './screens/quiz_detail_screen.dart'; // TAMBAHKAN INI
+import './screens/quiz_question_screen.dart'; // TAMBAHKAN INI
+import './screens/quiz_review_screen.dart'; // TAMBAHKAN INI
+import './screens/quiz_result_screen.dart'; // TAMBAHKAN INI
 import './utils/app_colors.dart';
 
 void main() {
@@ -38,7 +43,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => ClassDetailProvider()),
         ChangeNotifierProvider(create: (_) => MaterialDetailProvider()),
         ChangeNotifierProvider(create: (_) => TugasDetailProvider()), 
-        ChangeNotifierProvider(create: (_) => VideoProvider()), // TAMBAHKAN INI
+        ChangeNotifierProvider(create: (_) => VideoProvider()),
+        ChangeNotifierProvider(create: (_) => QuizProvider()), // TAMBAHKAN INI
       ],
       child: const MyApp(),
     ),
@@ -57,7 +63,7 @@ class MyApp extends StatelessWidget {
         primaryColor: AppColors.primaryRed,
         primarySwatch: Colors.red,
         scaffoldBackgroundColor: Colors.white,
-        fontFamily: 'Poppins', // Ganti dari Roboto ke Poppins sesuai pubspec.yaml
+        fontFamily: 'Poppins',
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFFB6252A),
           elevation: 0,
@@ -198,7 +204,6 @@ class MyApp extends StatelessWidget {
             imageUrls: args['images'] ?? [],
           );
         },
-        // TAMBAHKAN ROUTE BARU INI
         '/tugas-detail': (context) {
           final tugasId = ModalRoute.of(context)!.settings.arguments as String;
           return TugasDetailScreen(tugasId: tugasId);
@@ -210,10 +215,28 @@ class MyApp extends StatelessWidget {
             tugasTitle: args['tugasTitle'],
           );
         },
+        // ROUTE BARU UNTUK KUIS
+        '/quiz-detail': (context) {
+          final quizId = ModalRoute.of(context)!.settings.arguments as String;
+          return QuizDetailScreen(quizId: quizId);
+        },
+        '/quiz-question': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return QuizQuestionScreen(
+            quizId: args['quizId'],
+            questionNumber: args['questionNumber'],
+          );
+        },
+        '/quiz-review': (context) {
+          final quizId = ModalRoute.of(context)!.settings.arguments as String;
+          return QuizReviewScreen(quizId: quizId);
+        },
+        '/quiz-result': (context) {
+          final quizId = ModalRoute.of(context)!.settings.arguments as String;
+          return QuizResultScreen(quizId: quizId);
+        },
       },
-      // Error handling untuk route yang tidak ditemukan
       onGenerateRoute: (settings) {
-        // Debug print
         print('Unknown route: ${settings.name}');
         print('Arguments: ${settings.arguments}');
         
@@ -237,9 +260,9 @@ class MyApp extends StatelessWidget {
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                  const Text(
                     'Coba akses: /home, /my-classes, /class-detail, dll',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
