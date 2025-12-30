@@ -79,6 +79,13 @@ flutter:
     - assets/images/arrow_right.png
     - assets/images/quiz.png
     - assets/images/checklist.png
+    - assets/video/001.mp4
+    - assets/video/002.mp4
+    - assets/video/003.mp4
+    - assets/video/004.mp4
+    - assets/video/005.mp4
+    - assets/video/006.mp4
+   
   fonts:
     - family: Poppins
       fonts:

@@ -5,7 +5,8 @@ import './providers/announcement_provider.dart';
 import './providers/class_provider.dart';
 import './providers/class_detail_provider.dart';
 import './providers/material_detail_provider.dart';
-import './providers/tugas_detail_provider.dart'; // TAMBAHKAN INI
+import './providers/tugas_detail_provider.dart';
+import './providers/video_provider.dart'; // TAMBAH INI - IMPORT VIDEO PROVIDER
 import './screens/splash_screen.dart';
 import './screens/login_screen.dart';
 import './screens/language_help_screen.dart';
@@ -20,6 +21,7 @@ import './screens/announcement_detail_screen.dart';
 import './screens/class_detail_screen.dart';
 import './screens/material_detail_screen.dart';
 import './screens/document_viewer_screen.dart';
+import './screens/video_player_screen.dart'; // TAMBAH INI - IMPORT VIDEO PLAYER SCREEN
 import './utils/app_colors.dart';
 
 void main() {
@@ -33,7 +35,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => ClassProvider()),
         ChangeNotifierProvider(create: (_) => ClassDetailProvider()),
         ChangeNotifierProvider(create: (_) => MaterialDetailProvider()),
-        ChangeNotifierProvider(create: (_) => TugasDetailProvider()), // TAMBAHKAN INI
+        ChangeNotifierProvider(create: (_) => TugasDetailProvider()), 
+        ChangeNotifierProvider(create: (_) => VideoProvider()), // TAMBAHKAN INI
       ],
       child: const MyApp(),
     ),
@@ -52,7 +55,7 @@ class MyApp extends StatelessWidget {
         primaryColor: AppColors.primaryRed,
         primarySwatch: Colors.red,
         scaffoldBackgroundColor: Colors.white,
-        fontFamily: 'Roboto',
+        fontFamily: 'Poppins', // Ganti dari Roboto ke Poppins sesuai pubspec.yaml
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFFB6252A),
           elevation: 0,
@@ -62,7 +65,7 @@ class MyApp extends StatelessWidget {
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Roboto',
+            fontFamily: 'Poppins',
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -178,14 +181,21 @@ class MyApp extends StatelessWidget {
           final classId = ModalRoute.of(context)!.settings.arguments as String;
           return ClassDetailScreen(classId: classId);
         },
+        '/video-player': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return VideoPlayerScreen(
+            videoId: args['videoId'],
+            videoTitle: args['videoTitle'],
+          );
+        },
         '/document-viewer': (context) {
-    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    return DocumentViewerScreen(
-      documentTitle: args['title'],
-      documentType: args['type'],
-      imageUrls: args['images'] ?? [],
-    );
-  },
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return DocumentViewerScreen(
+            documentTitle: args['title'],
+            documentType: args['type'],
+            imageUrls: args['images'] ?? [],
+          );
+        },
       },
       // Error handling untuk route yang tidak ditemukan
       onGenerateRoute: (settings) {
