@@ -4,6 +4,7 @@ import './providers/user_provider.dart';
 import './providers/announcement_provider.dart'; 
 import './providers/class_provider.dart';
 import './providers/class_detail_provider.dart';
+import './providers/material_detail_provider.dart';
 import './screens/splash_screen.dart';
 import './screens/login_screen.dart';
 import './screens/language_help_screen.dart';
@@ -16,6 +17,7 @@ import './screens/edit_profile_screen.dart';
 import './screens/announcements_screen.dart';
 import './screens/announcement_detail_screen.dart';
 import './screens/class_detail_screen.dart';
+import './screens/material_detail_screen.dart';
 import './utils/app_colors.dart';
 
 void main() {
@@ -28,6 +30,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AnnouncementProvider()),
         ChangeNotifierProvider(create: (_) => ClassProvider()),
         ChangeNotifierProvider(create: (_) => ClassDetailProvider()),
+        ChangeNotifierProvider(create: (_) => MaterialDetailProvider()),
       ],
       child: const MyApp(),
     ),
@@ -168,7 +171,6 @@ class MyApp extends StatelessWidget {
           final announcementId = ModalRoute.of(context)!.settings.arguments as String;
           return AnnouncementDetailScreen(announcementId: announcementId);
         },
-        // TAMBAHKAN INI - ROUTE BARU UNTUK CLASS DETAIL
         '/class-detail': (context) {
           final classId = ModalRoute.of(context)!.settings.arguments as String;
           return ClassDetailScreen(classId: classId);
@@ -179,16 +181,6 @@ class MyApp extends StatelessWidget {
         // Debug print
         print('Unknown route: ${settings.name}');
         print('Arguments: ${settings.arguments}');
-        
-        // Handle /class-detail secara khusus di sini juga
-        if (settings.name == '/class-detail') {
-          final classId = settings.arguments as String? ?? '1';
-          return MaterialPageRoute(
-            builder: (context) => ClassDetailScreen(
-              classId: classId,
-            ),
-          );
-        }
         
         return MaterialPageRoute(
           builder: (context) => Scaffold(

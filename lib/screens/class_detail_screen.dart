@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/class_detail_provider.dart';
-import '../models/class_content_model.dart';
+import '../providers/material_detail_provider.dart';
 import '../utils/app_colors.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/class_content_card.dart';
+import '../screens/material_detail_screen.dart';
 
 class ClassDetailScreen extends StatefulWidget {
   final String classId;
@@ -43,7 +44,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
   }
 
   // Fungsi untuk filter konten berdasarkan search query
-  List<ClassContent> _filterContents(List<ClassContent> contents) {
+  List<dynamic> _filterContents(List<dynamic> contents) {
     if (_searchQuery.isEmpty) {
       return contents;
     }
@@ -58,6 +59,21 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
              descLower.contains(queryLower) ||
              pertemuanLower.contains(queryLower);
     }).toList();
+  }
+
+  // Fungsi untuk show material detail bottom sheet
+  void _showMaterialDetailBottomSheet(BuildContext context, String materialId) {
+    final materialProvider = Provider.of<MaterialDetailProvider>(context, listen: false);
+    final materialDetail = materialProvider.getMaterialDetailById(materialId);
+    
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return MaterialDetailBottomSheet(materialDetail: materialDetail);
+      },
+    );
   }
 
   @override
@@ -303,7 +319,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
   }
 
   // Widget untuk menampilkan konten dengan hasil search
-  Widget _buildContent(List<ClassContent> contents) {
+  Widget _buildContent(List<dynamic> contents) {
     if (contents.isEmpty) {
       // Tampilkan pesan jika tidak ada hasil
       return Center(
@@ -348,6 +364,15 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
           return ClassContentCard(
             content: content,
             isMaterialTab: _selectedTab == 0,
+            onTap: _selectedTab == 0
+                ? () {
+                    // Untuk materi, tampilkan bottom sheet
+                    _showMaterialDetailBottomSheet(context, content.id);
+                  }
+                : () {
+                    // Untuk tugas/kuis, bisa ditambahkan navigasi lain nanti
+                    print('Tugas/Kuis clicked: ${content.title}');
+                  },
           );
         }).toList(),
       ),
