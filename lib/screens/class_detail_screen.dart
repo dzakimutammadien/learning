@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/class_detail_provider.dart';
 import '../providers/material_detail_provider.dart';
+import '../providers/tugas_detail_provider.dart';
+import '../models/class_content_model.dart'; // IMPORT INI
 import '../utils/app_colors.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/class_content_card.dart';
-import '../screens/material_detail_screen.dart';
+import '../widgets/material_detail_bottom_sheet.dart';
+import '../widgets/tugas_detail_bottom_sheet.dart';
 
 class ClassDetailScreen extends StatefulWidget {
   final String classId;
@@ -21,7 +24,7 @@ class ClassDetailScreen extends StatefulWidget {
 
 class _ClassDetailScreenState extends State<ClassDetailScreen> {
   int _currentIndex = 1;
-  int _selectedTab = 0; // 0 = Materi, 1 = Tugas & Kuis
+  int _selectedTab = 0;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
@@ -44,7 +47,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
   }
 
   // Fungsi untuk filter konten berdasarkan search query
-  List<dynamic> _filterContents(List<dynamic> contents) {
+  List<ClassContent> _filterContents(List<ClassContent> contents) {
     if (_searchQuery.isEmpty) {
       return contents;
     }
@@ -71,7 +74,22 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
-        return MaterialDetailBottomSheet(materialDetail: materialDetail);
+        return MaterialDetailBottomSheet(materialDetail: materialDetail,materialId: materialId, );
+      },
+    );
+  }
+
+  // Fungsi untuk show tugas/kuis detail bottom sheet
+  void _showTugasDetailBottomSheet(BuildContext context, String tugasId) {
+    final tugasProvider = Provider.of<TugasDetailProvider>(context, listen: false);
+    final tugasDetail = tugasProvider.getTugasDetailById(tugasId);
+    
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return TugasDetailBottomSheet(tugasDetail: tugasDetail);
       },
     );
   }
@@ -147,7 +165,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
                 
                 const SizedBox(height: 20),
                 
-                // Search Bar - SEKARANG BISA DIKETIK
+                // Search Bar
                 Container(
                   height: 40,
                   decoration: BoxDecoration(
@@ -319,7 +337,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
   }
 
   // Widget untuk menampilkan konten dengan hasil search
-  Widget _buildContent(List<dynamic> contents) {
+  Widget _buildContent(List<ClassContent> contents) {
     if (contents.isEmpty) {
       // Tampilkan pesan jika tidak ada hasil
       return Center(
@@ -364,15 +382,15 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
           return ClassContentCard(
             content: content,
             isMaterialTab: _selectedTab == 0,
-            onTap: _selectedTab == 0
-                ? () {
-                    // Untuk materi, tampilkan bottom sheet
-                    _showMaterialDetailBottomSheet(context, content.id);
-                  }
-                : () {
-                    // Untuk tugas/kuis, bisa ditambahkan navigasi lain nanti
-                    print('Tugas/Kuis clicked: ${content.title}');
-                  },
+            onTap: () {
+              if (_selectedTab == 0) {
+                // Untuk materi, tampilkan bottom sheet materi
+                _showMaterialDetailBottomSheet(context, content.materialId ?? content.id);
+              } else {
+                // Untuk tugas/kuis, tampilkan bottom sheet tugas
+                _showTugasDetailBottomSheet(context, content.tugasId ?? content.id);
+              }
+            },
           );
         }).toList(),
       ),

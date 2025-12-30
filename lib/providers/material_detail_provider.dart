@@ -7,7 +7,7 @@ class MaterialDetailProvider extends ChangeNotifier {
     id: 'm1',
     title: 'Pengantar User Interface Design',
     pertemuan: 'Pertemuan 1',
-    description: 'Antarmuka yang dibangun harus memperhatikan prinsip-prinsip desain yang ada. Hal ini diharapkan agar antarmuka yang dibangun bukan hanya menarik secara visual tetapi dengan memperhatikan kaidah-kaidah prinsip desain diharapkan akan mendukung pengguna dalam menggunakan produk secara baik. Pelajaran mengenai prinsip UID ini sudah pernah diajarkan dalam mata kuliah Implementasi Desain Antarmuka Pengguna tetap pada matakuliah ini akan direview kembali sehingga dapat menjadi bekal saat memasukki materi mengenai User Experience',
+    description: 'Antarmuka yang dibangun harus memperhatikan prinsip-prinsip desain yang ada. Hal ini diharapkan agar antarmuka yang dibangun bukan hanya menarik secara visual tetapi dengan memperhatikan kaidah-kaidah prinsip desain diharapkan akan mendukung pengguna dalam menggunakan produk secara baik.',
     stats: '3 URLs, 2 Files, 3 Interactive Content',
     items: [
       MaterialItem(
@@ -73,37 +73,84 @@ class MaterialDetailProvider extends ChangeNotifier {
         url: 'https://youtube.com/watch?v=ghi789',
         createdAt: DateTime(2024, 1, 23),
       ),
-    ],
-  );
-
-  // Data untuk materi "02 - UX Research"
-  final MaterialDetail _uxResearch = MaterialDetail(
-    id: 'm2',
-    title: 'UX Research',
-    pertemuan: 'Pertemuan 2',
-    description: 'UX Research adalah proses memahami pengguna, kebutuhan mereka, dan konteks penggunaannya. Penelitian UX membantu tim desain dan produk membuat keputusan berbasis data.',
-    stats: '2 URLs, 3 Documents, 1 Video',
-    items: [
       MaterialItem(
         id: '10',
-        title: 'Introduction to UX Research',
-        type: MaterialItemType.document,
-        filePath: 'documents/ux-research-intro.pdf',
-        createdAt: DateTime(2024, 2, 1),
+        title: 'Interactive UI Design Quiz',
+        type: MaterialItemType.interactive,
+        url: 'https://learning.com/quiz/ui-design',
+        createdAt: DateTime(2024, 1, 24),
       ),
       MaterialItem(
         id: '11',
-        title: 'UX Research Methods',
+        title: 'UI Design Template File',
+        type: MaterialItemType.file,
+        filePath: 'templates/ui-template.fig',
+        createdAt: DateTime(2024, 1, 25),
+      ),
+    ],
+  );
+
+  // Data untuk materi "02 - Konsep User Interface Design"
+  final MaterialDetail _konsepUID = MaterialDetail(
+    id: 'm2',
+    title: 'Konsep User Interface Design',
+    pertemuan: 'Pertemuan 2',
+    description: 'Konsep dasar User Interface Design akan dipelajari bagaimana membangun sebuah Interaction Design pada antarmuka. Interaction ini sangat penting untuk aplikasi berkomunikasi dengan pengguna. Lalu dipelajari juga poin-poin penting pada interaction design seperti visibility, feedback, limitation, consistency dan affordance. Dan terakhir materi conceptual dan perceptual design interaction akan memberikan gambaran bagaimana bentuk dari Interaction.',
+    stats: '2 URLs, 1 Kuis, 3 Files, 1 Tugas',
+    items: [
+      MaterialItem(
+        id: '12',
+        title: 'Konsep Dasar Interaction Design',
+        type: MaterialItemType.document,
+        filePath: 'documents/konsep-interaction-design.pdf',
+        createdAt: DateTime(2024, 2, 1),
+      ),
+      MaterialItem(
+        id: '13',
+        title: 'Video: Prinsip-prinsip Interaction Design',
         type: MaterialItemType.video,
-        url: 'https://youtube.com/watch?v=jkl012',
+        url: 'https://youtube.com/watch?v=interaction-design',
         createdAt: DateTime(2024, 2, 2),
+      ),
+      MaterialItem(
+        id: '14',
+        title: 'Interactive Quiz - Konsep UI',
+        type: MaterialItemType.interactive,
+        url: 'https://learning.com/quiz/konsep-ui',
+        createdAt: DateTime(2024, 2, 3),
+      ),
+    ],
+  );
+
+  // Data untuk materi "03 - Interaksi pada User Interface Design"
+  final MaterialDetail _interaksiUID = MaterialDetail(
+    id: 'm3',
+    title: 'Interaksi pada User Interface Design',
+    pertemuan: 'Pertemuan 3',
+    description: 'Materi tentang berbagai pola interaksi pada antarmuka pengguna.',
+    stats: '3 URLs, 2 Files, 3 Interactive Content',
+    items: [
+      MaterialItem(
+        id: '15',
+        title: 'Patterns of Interaction Design',
+        type: MaterialItemType.document,
+        filePath: 'documents/interaction-patterns.pdf',
+        createdAt: DateTime(2024, 2, 10),
+      ),
+      MaterialItem(
+        id: '16',
+        title: 'Interactive Demo - UI Patterns',
+        type: MaterialItemType.interactive,
+        url: 'https://learning.com/demo/ui-patterns',
+        createdAt: DateTime(2024, 2, 11),
       ),
     ],
   );
 
   // Getter untuk materi
   MaterialDetail get pengantarUID => _pengantarUID;
-  MaterialDetail get uxResearch => _uxResearch;
+  MaterialDetail get konsepUID => _konsepUID;
+  MaterialDetail get interaksiUID => _interaksiUID;
 
   // Method untuk mendapatkan materi berdasarkan ID
   MaterialDetail getMaterialDetailById(String id) {
@@ -111,7 +158,9 @@ class MaterialDetailProvider extends ChangeNotifier {
       case 'm1':
         return _pengantarUID;
       case 'm2':
-        return _uxResearch;
+        return _konsepUID;
+      case 'm3':
+        return _interaksiUID;
       default:
         return _pengantarUID; // Default fallback
     }
@@ -119,6 +168,6 @@ class MaterialDetailProvider extends ChangeNotifier {
 
   // Method untuk mendapatkan semua materi
   List<MaterialDetail> getAllMaterialDetails() {
-    return [_pengantarUID, _uxResearch];
+    return [_pengantarUID, _konsepUID, _interaksiUID];
   }
 }

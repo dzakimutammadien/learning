@@ -1,4 +1,8 @@
-enum ContentType { materi, tugas, kuis }
+enum ContentType {
+  materi,
+  tugas,
+  kuis,
+}
 
 class ClassContent {
   final String id;
@@ -6,8 +10,9 @@ class ClassContent {
   final ContentType type;
   final String pertemuan;
   final String deskripsi;
-  final String deadline;
   final String? iconUrl;
+  final String? materialId; // ID untuk detail materi (jika type = materi)
+  final String? tugasId; // ID untuk detail tugas (jika type = tugas/kuis)
 
   ClassContent({
     required this.id,
@@ -15,7 +20,8 @@ class ClassContent {
     required this.type,
     required this.pertemuan,
     required this.deskripsi,
-    this.deadline = '',
     this.iconUrl,
+    this.materialId,
+    this.tugasId,
   });
 }
