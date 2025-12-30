@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/tugas_detail_model.dart';
 import '../utils/app_colors.dart';
+import '../screens/tugas_detail_screen.dart'; // Tambahkan import ini
 
 class TugasDetailBottomSheet extends StatelessWidget {
   final TugasDetail tugasDetail;
@@ -163,7 +164,7 @@ class TugasDetailBottomSheet extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         ...tugasDetail.items.map((item) {
-                          return _buildAttachmentItem(item);
+                          return _buildAttachmentItem(item, context);
                         }).toList(),
                       ],
                     ),
@@ -177,8 +178,14 @@ class TugasDetailBottomSheet extends StatelessWidget {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
-                              // Navigasi ke halaman pengerjaan tugas/kuis
-                              print('Mulai mengerjakan: ${tugasDetail.title}');
+                              // Navigasi ke halaman detail tugas full screen
+                              Navigator.pop(context); // Tutup bottom sheet
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TugasDetailScreen(tugasId: tugasDetail.id),
+                                ),
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryRed,
@@ -190,7 +197,7 @@ class TugasDetailBottomSheet extends StatelessWidget {
                             child: Text(
                               tugasDetail.type == TugasType.kuis 
                                 ? 'Mulai Kuis' 
-                                : 'Kerjakan Tugas',
+                                : 'Lihat Detail Tugas', // Ubah teks tombol
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
@@ -211,45 +218,75 @@ class TugasDetailBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildAttachmentItem(TugasItem item) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.grey.withOpacity(0.3)),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            item.filePath != null ? Icons.description : Icons.link,
-            color: AppColors.primaryRed,
-            size: 20,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              item.title,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.black,
+  Widget _buildAttachmentItem(TugasItem item, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Jika item adalah file, navigasi ke halaman detail tugas
+        if (item.filePath != null) {
+          // Tutup bottom sheet dan buka halaman detail tugas
+          Navigator.pop(context);
+          // Mencari tugas yang memiliki item ini
+          // Anda mungkin perlu logika tambahan untuk menemukan tugas yang tepat
+          // Untuk sekarang, kita asumsikan ini bagian dari tugas yang sedang dilihat
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TugasDetailScreen(tugasId: tugasDetail.id),
+            ),
+          );
+        } else if (item.url != null) {
+          // Buka URL di browser
+          print('Opening URL: ${item.url}');
+          // TODO: Implement URL opening
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.grey.withOpacity(0.3)),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              item.filePath != null ? Icons.description : Icons.link,
+              color: AppColors.primaryRed,
+              size: 20,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                item.title,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.black,
+                ),
               ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.arrow_forward_ios, size: 16),
-            onPressed: () {
-              // Handle open file/link
-              if (item.url != null) {
-                print('Opening URL: ${item.url}');
-              } else if (item.filePath != null) {
-                print('Opening file: ${item.filePath}');
-              }
-            },
-          ),
-        ],
+            IconButton(
+              icon: const Icon(Icons.arrow_forward_ios, size: 16),
+              onPressed: () {
+                // Handle open file/link
+                if (item.url != null) {
+                  print('Opening URL: ${item.url}');
+                  // TODO: Implement URL opening
+                } else if (item.filePath != null) {
+                  // Navigasi ke halaman detail tugas
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TugasDetailScreen(tugasId: tugasDetail.id),
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

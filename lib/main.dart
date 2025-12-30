@@ -22,6 +22,8 @@ import './screens/class_detail_screen.dart';
 import './screens/material_detail_screen.dart';
 import './screens/document_viewer_screen.dart';
 import './screens/video_player_screen.dart'; // TAMBAH INI - IMPORT VIDEO PLAYER SCREEN
+import './screens/tugas_detail_screen.dart'; // TAMBAHKAN INI
+import './screens/upload_file_screen.dart'; // TAMBAHKAN INI
 import './utils/app_colors.dart';
 
 void main() {
@@ -194,6 +196,18 @@ class MyApp extends StatelessWidget {
             documentTitle: args['title'],
             documentType: args['type'],
             imageUrls: args['images'] ?? [],
+          );
+        },
+        // TAMBAHKAN ROUTE BARU INI
+        '/tugas-detail': (context) {
+          final tugasId = ModalRoute.of(context)!.settings.arguments as String;
+          return TugasDetailScreen(tugasId: tugasId);
+        },
+        '/upload-file': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return UploadFileScreen(
+            tugasId: args['tugasId'],
+            tugasTitle: args['tugasTitle'],
           );
         },
       },

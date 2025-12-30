@@ -9,6 +9,7 @@ import '../widgets/bottom_nav_bar.dart';
 import '../widgets/class_content_card.dart';
 import '../widgets/material_detail_bottom_sheet.dart';
 import '../widgets/tugas_detail_bottom_sheet.dart';
+import '../screens/tugas_detail_screen.dart'; // TAMBAHKAN INI
 
 class ClassDetailScreen extends StatefulWidget {
   final String classId;
@@ -79,18 +80,14 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
     );
   }
 
-  // Fungsi untuk show tugas/kuis detail bottom sheet
-  void _showTugasDetailBottomSheet(BuildContext context, String tugasId) {
-    final tugasProvider = Provider.of<TugasDetailProvider>(context, listen: false);
-    final tugasDetail = tugasProvider.getTugasDetailById(tugasId);
-    
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return TugasDetailBottomSheet(tugasDetail: tugasDetail);
-      },
+  // Fungsi untuk show tugas/kuis detail - LANGSUNG KE HALAMAN DETAIL TUGAS
+  void _showTugasDetail(BuildContext context, String tugasId) {
+    // Langsung navigasi ke halaman detail tugas full screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TugasDetailScreen(tugasId: tugasId),
+      ),
     );
   }
 
@@ -387,8 +384,8 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
                 // Untuk materi, tampilkan bottom sheet materi
                 _showMaterialDetailBottomSheet(context, content.materialId ?? content.id);
               } else {
-                // Untuk tugas/kuis, tampilkan bottom sheet tugas
-                _showTugasDetailBottomSheet(context, content.tugasId ?? content.id);
+                // Untuk tugas/kuis, langsung ke halaman detail tugas
+                _showTugasDetail(context, content.tugasId ?? content.id);
               }
             },
           );
